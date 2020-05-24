@@ -1,0 +1,227 @@
+{%extends "index.html"%}
+{%block content%}
+<div>
+    <div class="jumbotron" style="text-align: center;font-family: 'Baloo Da 2', cursive;">
+        <table style="border-collapse: collapse;">
+            {%if prediction_result['Tumor']=='Yes'%}
+            <tr>
+                <td>
+                    <div style="font-family: 'Baloo Da 2', cursive;position: relative; height:50vh; width:50vw">
+                        <h3 class="text-center">Symptoms of Brain Tumors</h3>
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Symptom</th>
+                                    <th scope="col">Meningioma</th>
+                                    <th scope="col">Glioma</th>
+                                    <th scope="col">Pituitary Glioma</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td scope="row" colspan="5">Percent with Symptom</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Headache</th>
+                                    <td>40</td>
+                                    <td>50</td>
+                                    <td>36</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Seizure</th>
+                                    <td>65-95</td>
+                                    <td>15-25</td>
+                                    <td>40</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Hemiparesis</th>
+                                    <td>5-15</td>
+                                    <td>30-50</td>
+                                    <td>22</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Mental-status abnormalities</th>
+                                    <td>10</td>
+                                    <td>40-60</td>
+                                    <td>21</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td>
+                    <div class="chart-container" style="position: relative; height:40vh; width:40vw">
+                        <canvas id="myChart"></canvas>
+                        <script>
+                            var ctx = document.getElementById('myChart').getContext('2d');
+                            var myChart = new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: ['Yes', 'No'],
+                                    datasets: [{
+                                        label: 'Probability of Tumor',
+                                        data: ['{{ prediction_result["Yes_probability"]|tojson }}', '{{ prediction_result["No_probability"]|tojson }}'],
+                                        backgroundColor: [
+                                            'rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)'
+                                        ],
+                                        borderColor: [
+                                            'rgba(255, 99, 132, 1)',
+                                            'rgba(54, 162, 235, 1)'
+                                        ],
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
+                                }
+                            });
+                        </script>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="{{url_for('static', filename='uploads/Results/Result.png')}}" class="rounded"
+                        alt="Result Image">
+                    <img src="{{url_for('static', filename='uploads/Results/Result_watershed.png')}}" class="rounded"
+                        alt="Result Image">
+                </td>
+                <td>
+                    <div class="chart-container" style="position: relative; height:40vh; width:40vw">
+                        <canvas id="myClassChart"></canvas>
+                        <script>
+                            var ctx = document.getElementById('myClassChart').getContext('2d');
+                            var myChart = new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: ['Class 1', 'Class 2', 'Class 3'],
+                                    datasets: [{
+                                        label: 'Probability of Tumor Class',
+                                        data: ['{{ prediction_result["c1_probability"]|tojson }}', '{{ prediction_result["c2_probability"]|tojson }}', '{{ prediction_result["c3_probability"]|tojson }}'],
+                                        backgroundColor: [
+                                            'rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)',
+                                            'rgba(255, 206, 86, 0.2)'
+                                        ],
+                                        borderColor: [
+                                            'rgba(255, 99, 132, 1)',
+                                            'rgba(54, 162, 235, 1)',
+                                            'rgba(255, 206, 86, 1)'
+                                        ],
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
+                                }
+                            });
+                        </script>
+                    </div>
+                </td>
+            </tr>
+            {%else%}
+            <tr>
+                <td rowspan="2">
+                    <div style="font-family: 'Baloo Da 2', cursive;position: relative; height:50vh; width:50vw">
+                        <h3 class="text-center">Symptoms of Brain Tumors</h3>
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Symptom</th>
+                                    <th scope="col">Low-Grade Glioma</th>
+                                    <th scope="col">Malignant Glioma</th>
+                                    <th scope="col">Meningioma</th>
+                                    <th scope="col">Primary Central Nervous System Lymphoma</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td scope="row" colspan="5">Percent with Symptom</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Headache</th>
+                                    <td>40</td>
+                                    <td>50</td>
+                                    <td>36</td>
+                                    <td>35</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Seizure</th>
+                                    <td>65-95</td>
+                                    <td>15-25</td>
+                                    <td>40</td>
+                                    <td>17</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Hemiparesis</th>
+                                    <td>5-15</td>
+                                    <td>30-50</td>
+                                    <td>22</td>
+                                    <td>24</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Mental-status abnormalities</th>
+                                    <td>10</td>
+                                    <td>40-60</td>
+                                    <td>21</td>
+                                    <td>61</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td>
+                    <div class="chart-container" style="position: relative; height:40vh; width:40vw">
+                        <canvas id="myChart"></canvas>
+                        <script>
+                            var ctx = document.getElementById('myChart').getContext('2d');
+                            var myChart = new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: ['Yes', 'No'],
+                                    datasets: [{
+                                        label: 'Probability of Tumor',
+                                        data: ['{{ prediction_result["Yes_probability"]|tojson }}', '{{ prediction_result["No_probability"]|tojson }}'],
+                                        backgroundColor: [
+                                            'rgba(255, 99, 132, 0.2)',
+                                            'rgba(54, 162, 235, 0.2)'
+                                        ],
+                                        borderColor: [
+                                            'rgba(255, 99, 132, 1)',
+                                            'rgba(54, 162, 235, 1)'
+                                        ],
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        yAxes: [{
+                                            ticks: {
+                                                beginAtZero: true
+                                            }
+                                        }]
+                                    }
+                                }
+                            });
+                        </script>
+                    </div>
+                </td>
+            </tr>
+            {%endif%}
+        </table>
+    </div>
+</div>
+{%endblock%}
